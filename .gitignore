@@ -1,3 +1,6 @@
 node_modules/
 *.log
 .env
+tmp/
+cache/
+transformers_cache/

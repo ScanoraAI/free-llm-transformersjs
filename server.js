@@ -2,13 +2,17 @@ const express = require('express');
 const { pipeline } = require('@xenova/transformers');
 
 const app = express();
-app.use(express.json());
+app.use(express.json({limit: '1mb'})); // Limit payload for shared hosting
 
 // Lightweight text-generation model (downloads quantized weights on first run)
+// Using gpt2 which is tiny (~50MB) and works well on shared hosting
 const MODEL_ID = process.env.MODEL || 'Xenova/gpt-2';
 
 let generator = null;
 let loading = false;
+
+// Cache directory for model weights — use tmp or home
+const CACHE_DIR = process.env.TRANSFORMERS_CACHE || '/tmp/transformers_cache';
 
 async function getGenerator() {
   if (generator) return generator;
@@ -22,8 +26,9 @@ async function getGenerator() {
     console.log(`Loading model: ${MODEL_ID}`);
     generator = await pipeline('text-generation', MODEL_ID, {
       quantized: true,
-      // Use browser backend for Node.js compatibility
-      backend: 'wasm'
+      backend: 'wasm',
+      // Set cache dir for model storage
+      cache_dir: CACHE_DIR,
     });
     console.log('Model loaded successfully');
   } catch (err) {
@@ -48,7 +53,8 @@ app.post('/v1/chat/completions', async (req, res) => {
     const output = await gen(prompt, {
       max_new_tokens: max_tokens,
       temperature,
-      do_sample: true
+      do_sample: true,
+      top_p: 0.95,
     });
 
     const text = output[0]?.generated_text || '';
