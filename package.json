@@ -4,6 +4,7 @@
   "description": "Self-hosted free LLM API using Transformers.js (GoDaddy compatible)",
   "main": "server.js",
   "scripts": {
+    "build": "echo 'No build needed for minimal server'",
     "start": "node server.js"
   },
   "engines": {
