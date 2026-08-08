@@ -1,0 +1,13 @@
+{
+  "name": "free-llm-transformersjs",
+  "version": "1.0.0",
+  "description": "Self-hosted free LLM API using Transformers.js (WASM)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.5.4",
+    "express": "^4.21.0"
+  }
+}
