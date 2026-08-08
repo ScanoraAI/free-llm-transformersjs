@@ -1,4 +1,0 @@
-RewriteEngine On
-# Proxy to Express app (GoDaddy Node.js hosting)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ http://localhost:%{ENV:PORT}/$1 [P,L]
